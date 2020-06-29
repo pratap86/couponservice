@@ -11,7 +11,6 @@ import com.pratap.springcloud.model.Coupon;
 import com.pratap.springcloud.repos.CouponRepo;
 
 @RestController
-@RequestMapping("/couponapi")
 public class CouponRestController {
 
 	@Autowired
