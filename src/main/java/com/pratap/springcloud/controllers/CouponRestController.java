@@ -6,11 +6,15 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,7 +55,7 @@ public class CouponRestController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@RequestMapping("/coupons")
+	@RequestMapping(value = "/coupons/search", method = RequestMethod.GET)
 	public Coupon getCouponByCode(@RequestParam String code) {
 
 		Coupon coupon = repository.findByCode(code);
@@ -78,4 +82,28 @@ public class CouponRestController {
 		}
 		repository.deleteById(id);
 	}
+	
+	@PutMapping("coupons/{id}")
+	public Coupon updateCompleteResource(@RequestBody Coupon coupon, @PathVariable("id") long id){
+		Coupon savedCoupon = repository.findById(id).get();
+		if(savedCoupon == null) {
+			throw new CouponNotFoundException("Not available resource Id :"+id);
+		}
+		savedCoupon.setCode(coupon.getCode());
+		savedCoupon.setDiscount(coupon.getDiscount());
+		savedCoupon.setExpDate(coupon.getExpDate());
+		return repository.save(savedCoupon);
+	}
+	
+	@PatchMapping("coupons/{id}")
+	public Coupon updatePartialResource(@RequestBody Coupon coupon, @PathVariable("id") long id){
+		Coupon savedCoupon = repository.findById(id).get();
+		if(savedCoupon == null) {
+			throw new CouponNotFoundException("Not available resource Id :"+id);
+		}
+		savedCoupon.setCode(coupon.getCode());
+		return repository.save(savedCoupon);
+	}
+	
+	
 }
