@@ -1,5 +1,6 @@
 coupon-api.log
 coupon-api.log.*
+.DS_Store
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
